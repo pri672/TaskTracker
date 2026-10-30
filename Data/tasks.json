@@ -2,5 +2,9 @@
     {
         "name": "study python",
         "completed": true
+    },
+    {
+        "name": "study python",
+        "completed": false
     }
 ]

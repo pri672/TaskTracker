@@ -1,95 +1,44 @@
-import json
-import os
-
-FILE_PATH = "data/tasks.json"
-
-
-def load_tasks():
-    if os.path.exists(FILE_PATH):
-        with open(FILE_PATH, "r") as file:
-            return json.load(file)
-    return []
+from task_tracker.task_service import (
+    load_tasks,
+    add_task,
+    view_tasks,
+    complete_task,
+    delete_task
+)
 
 
-def save_tasks():
-    with open(FILE_PATH, "w") as file:
-        json.dump(tasks, file, indent=4)
+def main():
+    tasks = load_tasks()
 
+    while True:
+        print("\n===== TASK TRACKER =====")
+        print("1. Add Task")
+        print("2. View Tasks")
+        print("3. Complete Task")
+        print("4. Delete Task")
+        print("5. Exit")
 
-tasks = load_tasks()
+        choice = input("Choose an option (1-5): ")
 
-while True:
-    print("\n===== TASK TRACKER =====")
-    print("1. Add Task")
-    print("2. View Tasks")
-    print("3. Complete Task")
-    print("4. Delete Task")
-    print("5. Exit")
+        if choice == "1":
+            add_task(tasks)
 
-    choice = input("Choose an option (1-5): ")
+        elif choice == "2":
+            view_tasks(tasks)
 
-    if choice == "1":
-        task_name = input("Enter your task: ")
+        elif choice == "3":
+            complete_task(tasks)
 
-        task = {
-            "name": task_name,
-            "completed": False
-        }
+        elif choice == "4":
+            delete_task(tasks)
 
-        tasks.append(task)
-        save_tasks()
-        print("Task added successfully!")
+        elif choice == "5":
+            print("Thank you for using Task Tracker!")
+            break
 
-    elif choice == "2":
-        if not tasks:
-            print("No tasks found.")
         else:
-            print("\nYour Tasks:")
-            for i, task in enumerate(tasks, start=1):
-                status = "Completed" if task["completed"] else "Pending"
-                print(i, ".", task["name"], "-", status)
+            print("Invalid option")
 
-    elif choice == "3":
-        if not tasks:
-            print("No tasks to complete.")
-        else:
-            for i, task in enumerate(tasks, start=1):
-                print(i, ".", task["name"])
 
-            try:
-                number = int(input("Enter task number to complete: "))
-
-                if 1 <= number <= len(tasks):
-                    tasks[number - 1]["completed"] = True
-                    save_tasks()
-                    print("Task marked as completed!")
-                else:
-                    print("Invalid task number.")
-            except ValueError:
-                print("Please enter a number.")
-
-    elif choice == "4":
-        if not tasks:
-            print("No tasks to delete.")
-        else:
-            for i, task in enumerate(tasks, start=1):
-                print(i, ".", task["name"])
-
-            try:
-                number = int(input("Enter task number to delete: "))
-
-                if 1 <= number <= len(tasks):
-                    deleted_task = tasks.pop(number - 1)
-                    save_tasks()
-                    print("Deleted task:", deleted_task["name"])
-                else:
-                    print("Invalid task number.")
-            except ValueError:
-                print("Please enter a number.")
-
-    elif choice == "5":
-        print("Thank you for using Task Tracker!")
-        break
-
-    else:
-        print("Invalid option")
+if __name__ == "__main__":
+    main()
